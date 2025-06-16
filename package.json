@@ -1,14 +1,37 @@
 {
-  "name": "server",
-  "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
+    "eslint": "^9.29.0",
+    "prettier": "^3.5.3",
+    "prisma": "^6.9.0",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "hono": "^4.7.11"
-  },
-  "devDependencies": {
-    "wrangler": "^4.4.0"
+    "@prisma/client": "^6.9.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.24",
+    "zod": "^3.25.65"
   }
 }
