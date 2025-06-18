@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import 'dotenv/config';
 import cors from 'cors';
 
+const KEY = process.env.KEY;
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -65,12 +66,7 @@ app.post('/themes', async (req, res) => {
 app.post('/themes/:id/:key/approve', async (req: any, res: any) => {
     const { id, key } = req.params;
     try {
-        const paskeyvalid = await prisma.admins.findFirst({
-            where: {
-                unsafePassword: key
-            }
-        });
-        if (!paskeyvalid) {
+        if (key !== KEY) {
             return res.status(403).json({ error: 'Invalid passkey' });
         }
         const theme = await prisma.theme.update({
@@ -86,12 +82,7 @@ app.post('/themes/:id/:key/approve', async (req: any, res: any) => {
 app.post('/themes/:id/:key/reject', async (req: any, res: any) => {
     const { id, key } = req.params;
     try {
-        const paskeyvalid = await prisma.admins.findFirst({
-            where: {
-                unsafePassword: key
-            }
-        });
-        if (!paskeyvalid) {
+        if (key !== KEY) {
             return res.status(403).json({ error: 'Invalid passkey' });
         }
         const theme = await prisma.theme.update({

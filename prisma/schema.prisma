@@ -13,9 +13,3 @@ model theme {
   json  String
   state Int
 }
-
-model Admins {
-  id             Int    @id @default(autoincrement())
-  name           String
-  unsafePassword String
-}
