@@ -97,6 +97,6 @@ app.post('/themes/:id/:key/reject', async (req: any, res: any) => {
 });
 
 
-app.listen(3000, () => {
+app.listen(9478, () => {
     console.log('Server is running on port 3000');
 });
