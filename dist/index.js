@@ -15,7 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 require("dotenv/config");
+const cors_1 = __importDefault(require("cors"));
+const KEY = process.env.KEY;
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const prisma = new client_1.PrismaClient();
 app.get('/themes', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,12 +76,7 @@ app.post('/themes', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 app.post('/themes/:id/:key/approve', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, key } = req.params;
     try {
-        const paskeyvalid = yield prisma.admins.findFirst({
-            where: {
-                unsafePassword: key
-            }
-        });
-        if (!paskeyvalid) {
+        if (key !== KEY) {
             return res.status(403).json({ error: 'Invalid passkey' });
         }
         const theme = yield prisma.theme.update({
@@ -95,12 +93,7 @@ app.post('/themes/:id/:key/approve', (req, res) => __awaiter(void 0, void 0, voi
 app.post('/themes/:id/:key/reject', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, key } = req.params;
     try {
-        const paskeyvalid = yield prisma.admins.findFirst({
-            where: {
-                unsafePassword: key
-            }
-        });
-        if (!paskeyvalid) {
+        if (key !== KEY) {
             return res.status(403).json({ error: 'Invalid passkey' });
         }
         const theme = yield prisma.theme.update({
@@ -114,6 +107,6 @@ app.post('/themes/:id/:key/reject', (req, res) => __awaiter(void 0, void 0, void
         res.status(500).json({ error: 'Failed to approve theme' });
     }
 }));
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(9478, () => {
+    console.log('Server is running on port 9478');
 });
