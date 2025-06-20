@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const client_1 = require("@prisma/client");
+const prisma_1 = require("../generated/prisma");
 require("dotenv/config");
 const cors_1 = __importDefault(require("cors"));
 const KEY = process.env.KEY;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-const prisma = new client_1.PrismaClient();
+const prisma = new prisma_1.PrismaClient();
 app.get('/themes', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const themes = yield prisma.theme.findMany({
@@ -30,7 +30,9 @@ app.get('/themes', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
         let json = [];
         themes.forEach((theme) => {
-            json.push(JSON.parse(theme.json));
+            const parsed = JSON.parse(theme.json);
+            parsed.id = theme.id;
+            json.push(parsed);
         });
         res.json(json);
     }
@@ -48,7 +50,9 @@ app.get('/themes/reviewRequired', (req, res) => __awaiter(void 0, void 0, void 0
         });
         let json = [];
         themes.forEach((theme) => {
-            json.push(JSON.parse(theme.json));
+            const parsed = JSON.parse(theme.json);
+            parsed.id = theme.id;
+            json.push(parsed);
         });
         res.json(json);
     }
@@ -59,7 +63,11 @@ app.get('/themes/reviewRequired', (req, res) => __awaiter(void 0, void 0, void 0
 }));
 app.post('/themes', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const json = req.body;
+        if (!req.body || Object.keys(req.body).length === 0) {
+            return res.status(400).json({ error: 'No theme data provided in request body' });
+        }
+        console.log('Received theme data:', req.body);
+        const json = JSON.stringify(req.body);
         const theme = yield prisma.theme.create({
             data: {
                 json: json,

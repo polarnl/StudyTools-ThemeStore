@@ -1,5 +1,5 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import 'dotenv/config';
 import cors from 'cors';
 
@@ -9,13 +9,13 @@ app.use(cors());
 app.use(express.json());
 
 const prisma = new PrismaClient();
-type themeTS = {
+type Theme = {
     id: number;
     json: string;
     state: number;
-};
+}
 
-app.get('/themes', async (req, res) => {
+app.get('/themes', async (_req, res) => {
     try {
         const themes = await prisma.theme.findMany(
             {
@@ -25,7 +25,7 @@ app.get('/themes', async (req, res) => {
             }
         );
         let json: any[] = [];
-        themes.forEach((theme: themeTS) => {
+        themes.forEach((theme: Theme) => {
             const parsed = JSON.parse(theme.json);
             parsed.id = theme.id;
             json.push(parsed);
@@ -36,7 +36,7 @@ app.get('/themes', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch themes' });
     }
 });
-app.get('/themes/reviewRequired', async (req, res) => {
+app.get('/themes/reviewRequired', async (_req, res) => {
     try {
         const themes = await prisma.theme.findMany(
             {
@@ -46,7 +46,7 @@ app.get('/themes/reviewRequired', async (req, res) => {
             }
         );
         let json: any[] = [];
-        themes.forEach((theme: themeTS) => {
+        themes.forEach((theme: Theme) => {
             const parsed = JSON.parse(theme.json);
             parsed.id = theme.id;
             json.push(parsed);
